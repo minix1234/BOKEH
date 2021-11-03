@@ -47,12 +47,20 @@ source = ColumnDataSource(data=dict(x=x, y=y, z=z, kg=kg))
 #hover = HoverTool(tooltips=[("dP", "@x"),("Flow", "@y")])
 
 # Set up plot
-plot = figure(plot_height=400, plot_width=600, title="Flow Rate Calculations",
+plot = figure(plot_height=600, plot_width=800, title="Flow Rate Calculations",
             tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")#,
             #sizing_mode='scale_width')#,
             #x_range=[0, 4*np.pi], y_range=[-2.5, 2.5])
 plot.xaxis.axis_label = "Differential Pressure [inWC]"
+plot.xaxis.major_label_text_font_size = "16pt"
+plot.xaxis.axis_label_text_font_size = "22pt"
+plot.xaxis.axis_label_text_font_style = 'normal'
+
 plot.yaxis.axis_label = "Flow at Base conditions [MBPD]"
+plot.yaxis.major_label_text_font_size = "16pt"
+plot.yaxis.axis_label_text_font_size = "22pt"
+plot.yaxis.axis_label_text_font_style = 'normal'
+
 plot.sizing_mode='scale_both'
 plot.line('x', 'z', source=source, line_width=3, line_alpha=0.6)
 
@@ -148,8 +156,11 @@ for w in [density, Pi, viscosity, isentropic, DP_range,densitybase,orifice,pipe,
 
 # Set up layouts and add to document
 inputs = column(text, density, Pi, viscosity, isentropic, DP_range,densitybase,orifice,pipe)#,autoscale)
-upper = row(inputs, plot,data_table, width=1800)
-curdoc().add_root(upper)
+#upper = row(inputs, plot,data_table, width=1800)
+upper = row(inputs, plot)
+lower = row(data_table)
+layouts = column(upper,lower)
+curdoc().add_root(layouts)
 curdoc.title = "Flowrates"
     
 #apps = {'/': Application(FunctionHandler(make_document))}
