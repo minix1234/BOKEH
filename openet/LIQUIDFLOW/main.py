@@ -11,6 +11,9 @@ from bokeh.application import Application
 from bokeh.application.handlers.function import FunctionHandler
 from bokeh.plotting import figure, ColumnDataSource
 
+from bokeh.themes import Theme
+curdoc().theme = Theme(filename='/app/openet/theme.yaml')
+
 
 import fluids
 from fluids import nearest_pipe, differential_pressure_meter_solver
@@ -34,22 +37,12 @@ source = ColumnDataSource(data=dict(x=x, y=y, z=z, kg=kg))
 
 # Set up plot
 plot = figure(plot_height=600, plot_width=800, title="Flow Rate Calculations",
-            tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")#,
-            #sizing_mode='scale_width')#,
-            #x_range=[0, 4*np.pi], y_range=[-2.5, 2.5])
+            tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")
 
 plot.xaxis.axis_label = "Differential Pressure [inWC]"
-plot.xaxis.major_label_text_font_size = "16pt"
-plot.xaxis.axis_label_text_font_size = "22pt"
-plot.xaxis.axis_label_text_font_style = 'normal'
-
 plot.yaxis.axis_label = "Flow at Base conditions [MBPD]"
-plot.yaxis.major_label_text_font_size = "16pt"
-plot.yaxis.axis_label_text_font_size = "22pt"
-plot.yaxis.axis_label_text_font_style = 'normal'
 
-plot.sizing_mode='scale_both'
-plot.line('x', 'z', source=source, line_width=3, line_alpha=0.6)
+plot.line('x', 'z', source=source)
 
 columns = [
 TableColumn(field="x", title="dP [inWC]", formatter=NumberFormatter(format="0.00")),
@@ -62,31 +55,18 @@ data_table = DataTable(source=source, columns=columns, width=600, height=800)
 
 # Set up widgets
 text = TextInput(title="title", value='#Enter Engineering Tag Name')
-
-#density = Spinner(title="Density [Kg/M3]", low=1, high=1500, step=1, value=775, width=100)
 density = TextInput(title="Density [Kg/M3]", value='775', width=100)
-
-#Pi = Spinner(title="Upstream Pressure [PSIG]", low=1, high=5000, step=1, value=100, width=100)
 Pi = TextInput(title="Upstream Pressure [PSIG]", value='100', width=100)
-
-#viscosity = Spinner(title="viscosity [cP]", low=0.001, high=5000, step=0.001, value=1, width=100)
 viscosity = TextInput(title="viscosity [cP]", value='1', width=100)
-
-#isentropic = Spinner(title="Isentropic Exponent",low=0.1, high=2, step=0.1, value=1, width=100)
 isentropic = TextInput(title="Isentropic Exponent", value='1', width=100)
-
+densitybase = TextInput(title="Base Density [kg/m3]", value='1000', width=100)
+orifice = TextInput(title="Orifice Size [Inch]", value='0.75980', width=100)
+pipe = TextInput(title="Pipe ID [Inch]", value='2.066141', width=100)
 
 DP_range = RangeSlider(start=1, end=1000, value=(1,250), step=1, title="dP Range [Inch H2O]")
 
-#molecular = Spinner(title="Base Density",low=0.1, high=1500, step=1, value=875, width=100)
-densitybase = TextInput(title="Base Density [kg/m3]", value='1000', width=100)
 
-#orifice = Spinner(title="Orifice Size [inches]",low=0.1, high=10, step=0.01, value=0.759, width=100)
-orifice = TextInput(title="Orifice Size [Inch]", value='0.75980', width=100)
 
-#pipe = Spinner(title="Pipe Size [inches]",low=0.1, high=10, step=0.001, value=2.0661417322834645, width=100)
-pipe = TextInput(title="Pipe ID [Inch]", value='2.066141', width=100)
-#autoscale = CheckboxGroup(labels=["Auto-Scale"], active=[0])
 
 
 
