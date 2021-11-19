@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-#MAINTAINER Antonia Elek <antoniaelek at hotmail.com>
+#MAINTAINER mi nix <minix1234 at outlook.com>
 
 RUN conda install -y nomkl bokeh numpy pandas
 
