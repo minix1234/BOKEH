@@ -17,25 +17,7 @@ from fluids import nearest_pipe, differential_pressure_meter_solver
 from scipy.constants import psi, atm, inch,convert_temperature
 from thermo.chemical import Chemical, Mixture
 
-
-def mass_to_molar(m,MW):
-    """
-    Convert a mass flow from 'Kg/s' to MMSCFD
-    - 15 C
-    - 1 ATM
-    """
-    
-    mf = m*60*60 # Kg/s -> Kg/hr
-    mf = mf/MW #Kg/hr -> Kgmole/hr
-    mf = mf*22.414 #22.414 Nm3 per kmole Normal Volume occupies 22.414 [L/mol] [m3/kmol] [m3/kgmol]
-    mf = mf*((273+15)/273) #STP = 15oC, NTP 0oC: conversion from normal (0 C) to standard (15 C)
-    mf = mf*(3.282**3) # meters cubic to feet cubic
-    mf = mf*24 # Scf/hr -> cf/day
-    mf = mf/1e6 #SCFD -> MMSCFD
-    
-    #print(m,'Kg/s', MW,'g/mol', mf,'MMSCFD')
-    
-    return (mf)
+from openet.conversions import mass_to_molar
 
 
 #def make_document(doc):

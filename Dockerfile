@@ -1,6 +1,8 @@
 FROM continuumio/miniconda3
 
-#MAINTAINER mi nix <minix1234 at outlook.com>
+# MAINTAINER mi nix <minix1234 at outlook.com>
+
+# Install the main packages needed to run the docker applications
 
 RUN conda install -y nomkl bokeh numpy pandas
 
@@ -10,10 +12,24 @@ RUN conda install -y -c conda-forge fluids
 
 RUN mkdir app
 
+
 WORKDIR /app
 
-COPY GASFLOW /app/GASFLOW/
-COPY LIQUIDFLOW /app/LIQUIDFLOW/
+# Replaced individual copys (below) with the entire directory copy above
+# ----------------------------------------------------------------------
+# COPY GASFLOW /app/GASFLOW/
+# COPY LIQUIDFLOW /app/LIQUIDFLOW/
+
+COPY . /app/ 
+
+
+
+# Install the current directory as a editable python module
+# references the setup.py in the main directory
+
+RUN pip install -e .
+
+WORKDIR /app/openet
 
 EXPOSE 5006
 

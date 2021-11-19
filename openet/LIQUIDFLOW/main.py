@@ -18,22 +18,8 @@ from scipy.constants import psi, atm, inch,convert_temperature
 from thermo.chemical import Chemical, Mixture
 
 
-def mass_to_volume(m,den):
-    """
-    Convert a mass flow from 'Kg/s' to MBPD
-    """
-    
-    mf = m*60*60*24 # Kg/s -> Kg/day
-    mf = mf/den #Kg/day -> m3/day
-    mf = mf*6.289811 #CMD -> BPD
-    mf = mf/1000 #BPD -> MBPD
-    
-    #print(m,'Kg/s', MW,'g/mol', mf,'MMSCFD')
-    
-    return (mf)
+from openet.conversions import mass_to_volume
 
-
-#def make_document(doc):
 
 # Set up data
 N = 200
@@ -51,6 +37,7 @@ plot = figure(plot_height=600, plot_width=800, title="Flow Rate Calculations",
             tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")#,
             #sizing_mode='scale_width')#,
             #x_range=[0, 4*np.pi], y_range=[-2.5, 2.5])
+
 plot.xaxis.axis_label = "Differential Pressure [inWC]"
 plot.xaxis.major_label_text_font_size = "16pt"
 plot.xaxis.axis_label_text_font_size = "22pt"
