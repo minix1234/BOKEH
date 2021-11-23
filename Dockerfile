@@ -38,6 +38,6 @@ EXPOSE 5006
 #ENTRYPOINT ["bokeh","serve","/app/bokeh/vpc.py","--allow-websocket-origin=*"]
 
 
-ENTRYPOINT ["bokeh","serve","GASFLOW","LIQUIDFLOW","--allow-websocket-origin=10.118.197.199:5006"]
+ENTRYPOINT ["bokeh","serve","GASFLOW","LIQUIDFLOW","DP_METER_SOLVER","--allow-websocket-origin=10.118.197.199:5006"]
 
 #ENTRYPOINT ["bin/bash"]
