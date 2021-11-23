@@ -6,10 +6,11 @@ FROM continuumio/miniconda3
 
 RUN conda install -y nomkl bokeh numpy pandas
 
-RUN conda install -y -c conda-forge thermo
+#RUN conda install -y -c conda-forge thermo
 
 RUN conda install -y -c conda-forge fluids
 
+RUN conda clean --all
 RUN mkdir app
 
 

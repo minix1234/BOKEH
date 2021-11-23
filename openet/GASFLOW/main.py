@@ -4,7 +4,7 @@ import numpy as np
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
 from bokeh.models.widgets import Slider, TextInput, RangeSlider, Spinner,CheckboxGroup,DataTable, TableColumn, NumberFormatter
-from bokeh.models import Range1d
+from bokeh.models import Range1d, RadioButtonGroup
 from bokeh.plotting import figure
 from bokeh.server.server import Server
 from bokeh.application import Application
@@ -17,27 +17,27 @@ curdoc().theme = Theme(filename='/app/openet/theme.yaml')
 import fluids
 from fluids import nearest_pipe, differential_pressure_meter_solver
 from scipy.constants import psi, atm, inch,convert_temperature
-from thermo.chemical import Chemical, Mixture
-
-from openet.conversions import mass_to_molar
 
 
-#def make_document(doc):
+from openet.conversions import mass_to_molar, mass_to_volume
+
 
 # Set up data
 N = 200
 x = np.linspace(0, 4*np.pi, N)
 y = np.sin(x)
+z = y
+kg = y
+
 source = ColumnDataSource(data=dict(x=x, y=y))
 
-#hover = HoverTool(tooltips=[("dP", "@x"),("Flow", "@y")])
+
 
 # Set up plot
 plot = figure(plot_height=600, plot_width=800, title="Flow Rate Calculations",
             tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")
 
 plot.xaxis.axis_label = "Differential Pressure [inWC]"
-
 plot.yaxis.axis_label = "Flow at Base conditions [MMSCFD]"
 
 plot.line('x', 'y', source=source)
@@ -77,19 +77,10 @@ def update_data(attrname, old, new):
     rho = float(density.value)
     mu = float(viscosity.value)/1000
     k = float(isentropic.value)
-
+    rhos = float(densitybase.value)
     MW = float(molecular.value)
     Do = float(orifice.value)*inch
     Di = float(pipe.value)*inch
-
-    # Get the current slider values
-    #P1 = (Pi.value + 14.7)*psi
-    #rho = density.value
-    #mu = viscosity.value/1000
-    #k = isentropic.value
-    #MW = molecular.value
-    #Do = orifice.value*inch
-    #Di = pipe.value*inch
     
     
     slider_value=DP_range.value ##Getting slider value
@@ -102,25 +93,28 @@ def update_data(attrname, old, new):
 
     DP = []
     MF = []
+    SMF = []
     M = []
 
     for i,dP in enumerate(Log_steps):
         #   print(i,dP)
         DP.append(dP)
-
-        #dP = i # differential in inches of water ("H2O) 
+ 
         P2 = P1 - (dP*248.84)
-        #print(Di,Do,P1,P2,rho,mu,k)
+
         m = differential_pressure_meter_solver(D=Di, D2=Do, P1=P1, P2=P2, rho=rho, mu=mu, k=k, meter_type='ISO 5167 orifice', taps='flange')
-        mf = mass_to_molar(m, MW)
+        
         M.append(m)
+        
+        mf = mass_to_molar(m, MW)
+        
         MF.append(mf)
 
 
     source.data = dict(x=DP, y=MF)
     #print(source.data['x'])
     
-for w in [text,density, Pi, viscosity, isentropic, DP_range,molecular,orifice,pipe]:
+for w in [text,density, Pi, viscosity, isentropic, DP_range,densitybase,molecular,orifice,pipe]:
     w.on_change('value', update_data)
 
 
