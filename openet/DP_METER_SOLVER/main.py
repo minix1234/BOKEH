@@ -13,7 +13,7 @@ from openet.dpmeter import dPMeterSolver
 dpm = dPMeterSolver()
 
     
-for w in [dpm.text,dpm.density, dpm.Pi, dpm.viscosity, dpm.isentropic, dpm.DP_range,dpm.densitybase,dpm.molecular,dpm.orifice,dpm.pipe]:
+for w in [dpm.meter_select,dpm.tap_position, dpm.text,dpm.density, dpm.Pi, dpm.viscosity, dpm.isentropic, dpm.DP_range,dpm.densitybase,dpm.molecular,dpm.orifice,dpm.pipe]:
     w.on_change('value', dpm.update_data)
 
 
@@ -32,9 +32,10 @@ row1 = row(dpm.density, dpm.densitybase)
 row2 = row(dpm.Pi, dpm.viscosity)
 row3 = row(dpm.isentropic,dpm.molecular)
 row4 = row(dpm.orifice,dpm.pipe)
+row5 = row(dpm.meter_select)
+row6 = row(dpm.tap_select, dpm.tap_position)
 
-
-inputs = column(dpm.text,dpm.radio_button_group, dpm.DP_range, row1, row2, row3, row4)
+inputs = column(dpm.text,dpm.radio_button_group, row5,row6, dpm.DP_range, row1, row2, row3, row4)
 upper = row(inputs, dpm.plot)
 lower = row(dpm.gas_data_table,dpm.liquid_data_table)
 

@@ -5,7 +5,7 @@ from bokeh.util.logconfig import bokeh_logger as lg
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column
-from bokeh.models.widgets import Slider, TextInput, RangeSlider, Spinner,CheckboxGroup,DataTable, TableColumn, NumberFormatter
+from bokeh.models.widgets import Slider, TextInput, RangeSlider, Spinner,CheckboxGroup,DataTable, TableColumn, NumberFormatter, Select
 from bokeh.models import Range1d, RadioButtonGroup
 from bokeh.plotting import figure
 from bokeh.server.server import Server
@@ -22,7 +22,7 @@ from scipy.constants import psi, atm, inch,convert_temperature
 
 
 from openet.conversions import mass_to_molar, mass_to_volume
-
+from openet.constants import Meter_Type, Tap_Position, Tap_Type
 
 # Class Definition
 # ---------------------------------
@@ -104,10 +104,11 @@ class dPMeterSolver():
 
         self._columns_gas = [
             TableColumn(field="x", title="dP [inWC]", formatter=NumberFormatter(format="0.0")),
+            TableColumn(field="kg", title="Mass Flow [Kg/s]", formatter=NumberFormatter(format="0.000")),
             TableColumn(field="y", title="Flow Rate [MMSCFD]",formatter=NumberFormatter(format="0.00"))
             ]
 
-        tablewidth=300
+        tablewidth=450
 
         self.gas_data_table = DataTable(source=self.source, columns=self._columns_gas, width=tablewidth, height=800)
 
@@ -135,7 +136,7 @@ class dPMeterSolver():
         self.density    = TextInput(title="Density [Kg/M3]", value='775', width=self._widgetwidth)
         self.Pi         = TextInput(title="Pressure [PSIG]", value='100', width=self._widgetwidth)
         self.viscosity  = TextInput(title="viscosity [cP]", value='1', width=self._widgetwidth)
-        self.isentropic = TextInput(title="Isentropic Exponent", value='1', width=self._widgetwidth)
+        self.isentropic = TextInput(title="Isentropic Exponent", value='1.1', width=self._widgetwidth)
         self.densitybase= TextInput(title="Base Density [kg/m3]", value='1000', width=self._widgetwidth)
         self.orifice    = TextInput(title="Orifice Size [Inch]", value='0.75980', width=self._widgetwidth)
         self.pipe       = TextInput(title="Pipe ID [Inch]", value='2.066141', width=self._widgetwidth)
@@ -156,7 +157,11 @@ class dPMeterSolver():
         self.radio_button_group = RadioButtonGroup(labels=labels, active=0) 
         #self.ga inits to true. "gas active", which is the first index, or 0, which is active
 
-    
+        # Selection Options
+        self.meter_select = Select(title="Meter Type:", value="ISO 5167 orifice", options=Meter_Type)
+        self.tap_select = Select(title="Tap Location:", value="flange", options=Tap_Type, width=self._widgetwidth)
+        self.tap_position = Select(title="Tap Position:", value="180 degree", options=Tap_Position, width=self._widgetwidth)
+
     def update_data(self, attr, old, new):
 
 
@@ -174,6 +179,19 @@ class dPMeterSolver():
         Do = float(self.orifice.value)*inch
         Di = float(self.pipe.value)*inch
 
+        meter = self.meter_select.value
+        tap = self.tap_select.value
+    
+        #lg.info('meter selected')
+        #lg.info(meter)
+        eccentric_test = ['Miller eccentric orifice','eccentric orifice','ISO 15377 eccentric orifice']
+
+        if meter in eccentric_test:
+            self.tap_position.disabled = False
+            tap_position = self.tap_position.value
+        else:
+            self.tap_position.disabled = True
+            tap_position = None
 
         slider_value=self.DP_range.value ##Getting slider value
         dp_min=slider_value[0]
@@ -197,7 +215,7 @@ class dPMeterSolver():
 
             P2 = P1 - (dP*248.84)
             
-            m = differential_pressure_meter_solver(D=Di, D2=Do, P1=P1, P2=P2, rho=rho, mu=mu, k=k, meter_type='ISO 5167 orifice', taps='flange')
+            m = differential_pressure_meter_solver(D=Di, D2=Do, P1=P1, P2=P2, rho=rho, mu=mu, k=k, meter_type=meter, taps='flange', tap_position=tap_position)
             
             M.append(m)
 

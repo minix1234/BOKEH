@@ -1,7 +1,7 @@
 attrs:
   Plot:
     outline_line_color: null
-    toolbar_location: null
+    toolbar_location: 'right'
     min_border: 20
     sizing_mode: 'scale_both'
     
