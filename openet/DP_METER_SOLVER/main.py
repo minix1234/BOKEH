@@ -12,8 +12,9 @@ from openet.dpmeter import dPMeterSolver
 # Initialize a new dP meter solver class
 dpm = dPMeterSolver()
 
+dpm.update_data(None,None,None)
     
-for w in [dpm.meter_select,dpm.tap_position, dpm.text,dpm.density, dpm.Pi, dpm.viscosity, dpm.isentropic, dpm.DP_range,dpm.densitybase,dpm.molecular,dpm.orifice,dpm.pipe]:
+for w in [dpm.meter_select,dpm.tap_select,dpm.tap_position, dpm.text,dpm.density, dpm.Pi, dpm.viscosity, dpm.isentropic, dpm.DP_range,dpm.densitybase,dpm.molecular,dpm.orifice,dpm.pipe]:
     w.on_change('value', dpm.update_data)
 
 
