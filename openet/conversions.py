@@ -29,8 +29,8 @@ def mass_to_molar(m,MW):
     mf = mf*22.414 #22.414 Nm3 per kmole Normal Volume occupies 22.414 [L/mol] [m3/kmol] [m3/kgmol]
     mf = mf*((273+15)/273) #STP = 15oC, NTP 0oC: conversion from normal (0 C) to standard (15 C)
     mf = mf*(3.282**3) # meters cubic to feet cubic
-    mf = mf*24 # Scf/hr -> cf/day
-    mf = mf/1e6 #SCFD -> MMSCFD
+    #mf = mf*24 # Scf/hr -> cf/day
+    mf = mf/1e3 #SCFH -> MSCFH
     
     #print(m,'Kg/s', MW,'g/mol', mf,'MMSCFD')
     

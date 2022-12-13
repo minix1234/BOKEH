@@ -91,7 +91,7 @@ class dPMeterSolver():
                     tools="crosshair,box_zoom,pan,reset,save,wheel_zoom")
 
         self.plot.xaxis.axis_label = "Differential Pressure [inWC]"
-        self.plot.yaxis.axis_label = "Flow at Base conditions [MMSCFD]"
+        self.plot.yaxis.axis_label = "Flow at Base conditions [MSCFH]"
         self.plot.line('x', 'y', source=self.source)
 
     
@@ -105,7 +105,7 @@ class dPMeterSolver():
         self._columns_gas = [
             TableColumn(field="x", title="dP [inWC]", formatter=NumberFormatter(format="0.0")),
             TableColumn(field="kg", title="Mass Flow [Kg/s]", formatter=NumberFormatter(format="0.000")),
-            TableColumn(field="y", title="Flow Rate [MMSCFD]",formatter=NumberFormatter(format="0.00"))
+            TableColumn(field="y", title="Flow Rate [MSCFH]",formatter=NumberFormatter(format="0.00"))
             ]
 
         tablewidth=450
@@ -263,7 +263,7 @@ class dPMeterSolver():
 
         if self.ga:
             
-            self.plot.yaxis.axis_label = "Flow at Base conditions [MMSCFD]"
+            self.plot.yaxis.axis_label = "Flow at Base conditions [MSCFH]"
 
         else:
 
